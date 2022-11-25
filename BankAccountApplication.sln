@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.OrchestratorAPI
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.Shared", "BankAccount.Shared\BankAccount.Shared.csproj", "{197F12FC-397D-4C2B-A7E2-BA1DC5A78EA8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.UI", "BankAccount.UI\BankAccount.UI.csproj", "{F263A715-1ED5-46AA-8D53-E1C28FD4C242}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{197F12FC-397D-4C2B-A7E2-BA1DC5A78EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{197F12FC-397D-4C2B-A7E2-BA1DC5A78EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{197F12FC-397D-4C2B-A7E2-BA1DC5A78EA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F263A715-1ED5-46AA-8D53-E1C28FD4C242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F263A715-1ED5-46AA-8D53-E1C28FD4C242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F263A715-1ED5-46AA-8D53-E1C28FD4C242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F263A715-1ED5-46AA-8D53-E1C28FD4C242}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
