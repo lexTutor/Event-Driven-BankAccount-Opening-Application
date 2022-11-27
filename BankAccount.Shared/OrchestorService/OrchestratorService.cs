@@ -4,7 +4,7 @@ using BankAccount.Shared.Utilities;
 using static BankAccount.Shared.Domain.RecordTypes;
 using static BankAccount.Shared.Utilities.Enumeration;
 
-namespace BankAccount.OrchestratorAPI.OrchestorService
+namespace BankAccount.Shared.OrchestorService
 {
     public class OrchestratorService : IOrchestratorService
     {
