@@ -20,7 +20,7 @@
         /// <summary>
         /// Creates an <see cref="OperationResult"/> indicating a failed operation, with a list of errors if applicable.
         /// </summary>
-        /// <param name="errors">An optional array of <see cref="String"/> which caused the operation to fail.</param>
+        /// <param name="errors">An optional array of <see cref="string"/> which caused the operation to fail.</param>
         public static OperationResult<TResult> Failed(params string[] errors) => new OperationResult<TResult> { Successful = false, Errors = errors };
 
         /// <summary>
