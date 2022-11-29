@@ -1,4 +1,6 @@
-﻿using BankAccount.Shared.Contracts;
+﻿using AutoMapper;
+using BankAccount.Shared.Contracts;
+using BankAccount.Shared.Domain.Entities;
 using BankAccount.Shared.Utilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -9,11 +11,17 @@ namespace BankAccount.Shared.WorkFlowServices
 {
     public class PotentialMemberWorkflowService : IWorkflowService
     {
+        private readonly IMapper _mapper;
         private readonly ILogger<PotentialMemberWorkflowService> _logger;
-
-        public PotentialMemberWorkflowService(ILogger<PotentialMemberWorkflowService> logger)
+        private readonly IRepository<PotentialMember> _potentialMemberRepository;
+        public PotentialMemberWorkflowService(
+            ILogger<PotentialMemberWorkflowService> logger,
+            IRepository<PotentialMember> potentialMemberRepository,
+            IMapper mapper)
         {
             _logger = logger;
+            _potentialMemberRepository = potentialMemberRepository;
+            _mapper = mapper;
         }
 
         public WorkFlow WorkFlow => WorkFlow.PotentialMember;
@@ -27,19 +35,47 @@ namespace BankAccount.Shared.WorkFlowServices
                 if (string.IsNullOrWhiteSpace(model.WebsiteStartingUrl))
                     return OperationResult<string>.Failed($"{nameof(model.WebsiteStartingUrl)} is required");
 
-                if (model.TOD <= DateTime.UtcNow)
+                if (model.TOD > DateTime.UtcNow)
                     return OperationResult<string>.Failed($"Invalid {nameof(model.TOD)}");
 
                 return OperationResult<string>.Success;
             }
             catch (JsonException ex)
             {
-                _logger.LogWarning($"Unable to deserialize metadata errors:{ex.Message}");
+                _logger.LogError($"Unable to deserialize metadata errors:{ex.Message}");
                 return OperationResult<string>.Failed();
             }
             catch (Exception ex)
             {
-                _logger.LogWarning($"An error occured during data processing {ex}");
+                _logger.LogError($"An error occured during data processing {ex}");
+                throw;
+            }
+        }
+
+        public async Task ExecuteAsync(string metadata)
+        {
+            try
+            {
+                var validateMetdata = ValidateMetadata(metadata);
+                if (!validateMetdata.Successful)
+                {
+                    _logger.LogWarning($"Metadata validation was unsuccessful with error: {validateMetdata.Result}");
+                }
+
+                PotentialMemberPayload model = JsonConvert.DeserializeObject<PotentialMemberPayload>(metadata);
+
+                _logger.LogDebug("Initiating Call to database to store potential Member information");
+
+                var entity = _mapper.Map<PotentialMember>(model);
+
+                await _potentialMemberRepository.InsertAsync(entity);
+                await _potentialMemberRepository.DbContext.SaveChangesAsync();
+
+                _logger.LogDebug("Sucessfully stored potential member details");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occured during data processing {ex}");
                 throw;
             }
         }

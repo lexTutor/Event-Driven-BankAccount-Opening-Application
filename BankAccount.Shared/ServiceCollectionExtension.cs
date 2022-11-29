@@ -1,7 +1,9 @@
-﻿using BankAccount.Shared.Contracts;
+﻿using AutoMapper;
+using BankAccount.Shared.Contracts;
 using BankAccount.Shared.Data;
 using BankAccount.Shared.OrchestorService;
 using BankAccount.Shared.QueueServices;
+using BankAccount.Shared.Utilities;
 using BankAccount.Shared.WorkFlowServices;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,8 +26,15 @@ namespace BankAccount.Shared
             services.AddScoped<IWorkflowService, CommunicateWithMemberWorkflowService>();
             services.AddScoped<IWorkflowProviderSelector, WorkFlowProviderSelector>();
             services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
             return services;
+        }
+
+        public static void AddAutoMap(this IServiceCollection services)
+        {
+            IMapper mapper = AutoMapperConfiguration.ConfigureMappings();
+            services.AddSingleton(mapper);
         }
     }
 }

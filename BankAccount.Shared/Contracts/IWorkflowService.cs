@@ -7,6 +7,7 @@ namespace BankAccount.Shared.Contracts
     {
         WorkFlow WorkFlow { get; }
 
+        Task ExecuteAsync(string metadata);
         OperationResult<string> ValidateMetadata(string metadata);
     }
 }

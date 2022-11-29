@@ -38,7 +38,7 @@ namespace BankAccount.Shared.OrchestorService
             await _queueService.PublishMessageToQueue(workFlowType.ToString(), payload.Metadata);
             _logger.LogInformation($"Published data to queue {workFlowType}");
 
-            return new OperationResult<string>() { Result = "Workflow successfully initiated" };
+            return new OperationResult<string>() { Result = "Workflow successfully initiated", Successful = true };
         }
     }
 }

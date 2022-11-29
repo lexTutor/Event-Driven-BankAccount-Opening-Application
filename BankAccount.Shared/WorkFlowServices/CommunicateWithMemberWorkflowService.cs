@@ -17,7 +17,7 @@ namespace BankAccount.Shared.WorkFlowServices
         }
 
         public WorkFlow WorkFlow => WorkFlow.CommunicateWithMember;
-
+       
         public OperationResult<string> ValidateMetadata(string metadata)
         {
             try
@@ -46,5 +46,11 @@ namespace BankAccount.Shared.WorkFlowServices
                 throw;
             }
         }
+
+        public Task ExecuteAsync(string metadata)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

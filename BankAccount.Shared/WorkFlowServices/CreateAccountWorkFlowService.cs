@@ -45,5 +45,10 @@ namespace BankAccount.Shared.WorkFlowServices
                 throw;
             }
         }
+
+        public Task ExecuteAsync(string metadata)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

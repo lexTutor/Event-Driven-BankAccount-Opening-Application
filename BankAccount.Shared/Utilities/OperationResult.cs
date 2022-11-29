@@ -15,7 +15,7 @@
         /// <summary>
         /// Whether if the operation succeeded or not.
         /// </summary>
-        public bool Successful { get; protected set; }
+        public bool Successful { get; set; }
 
         /// <summary>
         /// Creates an <see cref="OperationResult"/> indicating a failed operation, with a list of errors if applicable.
