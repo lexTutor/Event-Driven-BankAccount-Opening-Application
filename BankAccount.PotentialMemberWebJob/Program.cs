@@ -30,7 +30,7 @@ class Program
             services.AddScoped<PotentialMemberJob, PotentialMemberJob>();
             services.AddSharedServices();
             services.AddAutoMap();
-            services.AddDatabase();
+            services.AddDatabase(context.Configuration);
         });
         var host = builder.Build();
         using (host)

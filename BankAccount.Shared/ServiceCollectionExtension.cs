@@ -5,17 +5,20 @@ using BankAccount.Shared.OrchestorService;
 using BankAccount.Shared.QueueServices;
 using BankAccount.Shared.Utilities;
 using BankAccount.Shared.WorkFlowServices;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BankAccount.Shared
 {
     public static class ServiceCollectionExtension
     {
-        public static void AddDatabase(this IServiceCollection services)
+        public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = "Data Source=BankAccount.db";
-
-            services.AddSqlite<BankContext>(connectionString); ;
+            services.AddDbContextPool<BankContext>(option =>
+            {
+                option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
         }
 
         public static IServiceCollection AddSharedServices(this IServiceCollection services)

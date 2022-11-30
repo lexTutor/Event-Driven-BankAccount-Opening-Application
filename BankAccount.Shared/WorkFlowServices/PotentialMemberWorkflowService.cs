@@ -35,6 +35,9 @@ namespace BankAccount.Shared.WorkFlowServices
                 if (string.IsNullOrWhiteSpace(model.WebsiteStartingUrl))
                     return OperationResult<string>.Failed($"{nameof(model.WebsiteStartingUrl)} is required");
 
+                if (string.IsNullOrWhiteSpace(model.IpAddress))
+                    return OperationResult<string>.Failed($"{nameof(model.IpAddress)} is required");
+
                 if (model.TOD > DateTime.UtcNow)
                     return OperationResult<string>.Failed($"Invalid {nameof(model.TOD)}");
 
@@ -52,7 +55,7 @@ namespace BankAccount.Shared.WorkFlowServices
             }
         }
 
-        public async Task ExecuteAsync(string metadata)
+        public async Task ExecuteAsync(string metadata, string sessionId)
         {
             try
             {
@@ -67,6 +70,7 @@ namespace BankAccount.Shared.WorkFlowServices
                 _logger.LogDebug("Initiating Call to database to store potential Member information");
 
                 var entity = _mapper.Map<PotentialMember>(model);
+                entity.SessionId = sessionId;
 
                 await _potentialMemberRepository.InsertAsync(entity);
                 await _potentialMemberRepository.DbContext.SaveChangesAsync();

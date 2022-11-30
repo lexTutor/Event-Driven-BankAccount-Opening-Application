@@ -21,13 +21,13 @@ namespace BankAccount.PotentialMemberWebJob
         }
 
         [FunctionName("PotentialMemberFuction")]
-        public async Task Run([ServiceBusTrigger(queueName: Connection.PotentialMemberQueue)] string myQueueItem)
+        public async Task Run([ServiceBusTrigger(queueName: Constants.PotentialMemberQueue)] string myQueueItem, string sessionId)
         {
             try
             {
                 _logger.LogDebug($"ServiceBus queue trigger function attempting to process message");
 
-                await _potentialMemberWorkFlow.ExecuteAsync(myQueueItem);
+                await _potentialMemberWorkFlow.ExecuteAsync(myQueueItem, sessionId);
 
                 _logger.LogDebug($"ServiceBus queue trigger function processed message successfully");
             }

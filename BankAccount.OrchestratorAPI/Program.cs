@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSharedServices();
-builder.Services.AddDatabase();
+builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddAutoMap();
 builder.Services.AddLogging();
 

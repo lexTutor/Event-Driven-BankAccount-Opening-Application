@@ -1,4 +1,5 @@
 ﻿using BankAccount.Shared.Contracts;
+using BankAccount.Shared.CustomExceptions;
 using BankAccount.Shared.QueueServices;
 using BankAccount.Shared.Utilities;
 using Microsoft.Extensions.Logging;
@@ -20,25 +21,42 @@ namespace BankAccount.Shared.OrchestorService
             _logger = logger;
             _queueService = queueService;
         }
+
         public async Task<OperationResult<string>> InitiateWorkFlow(InitiateWorkFlowPayload payload)
         {
-            _logger.LogInformation($"Initiating Workflow for WorkFlowId :{payload.WorkFlowId}");
+            try
+            {
+                _logger.LogInformation($"Initiating Workflow for WorkFlowId :{payload.WorkFlowId}");
 
-            WorkFlow workFlowType = (WorkFlow)payload.WorkFlowId;
+                WorkFlow workFlowType = (WorkFlow)payload.WorkFlowId;
 
-            IWorkflowService workFlow = _workflowProvider.GetWorkFlowService(workFlowType);
-            if (workFlow == null)
-                return OperationResult<string>.Failed($"Invalid {nameof(payload.WorkFlowId)}");
+                IWorkflowService workFlow = _workflowProvider.GetWorkFlowService(workFlowType);
+                if (workFlow == null)
+                    return OperationResult<string>.Failed($"Invalid {nameof(payload.WorkFlowId)}");
 
-            OperationResult<string> validationResult = workFlow.ValidateMetadata(payload.Metadata);
-            if (!validationResult.Successful)
-                return OperationResult<string>.Failed($"Invalid {nameof(payload.Metadata)} for Workflow {workFlowType}");
+                OperationResult<string> validationResult = workFlow.ValidateMetadata(payload.Metadata);
+                if (!validationResult.Successful)
+                    return OperationResult<string>.Failed($"Invalid {nameof(payload.Metadata)} for Workflow {workFlowType}");
 
-            _logger.LogInformation($"Publishing data to queue {workFlowType}");
-            await _queueService.PublishMessageToQueue(workFlowType.ToString(), payload.Metadata);
-            _logger.LogInformation($"Published data to queue {workFlowType}");
+                string sessionId = string.IsNullOrWhiteSpace(payload.SessionId)
+                    ? Guid.NewGuid().ToString() : payload.SessionId;
 
-            return new OperationResult<string>() { Result = "Workflow successfully initiated", Successful = true };
+                _logger.LogInformation($"Publishing data to queue {workFlowType}");
+                await _queueService.PublishMessageToQueue(workFlowType.ToString(), payload.Metadata, sessionId);
+                _logger.LogInformation($"Published data to queue {workFlowType}");
+
+                return new OperationResult<string>() { Result = sessionId, Successful = true };
+            }
+            catch (QueueServiceException ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw;
+            }
         }
     }
 }

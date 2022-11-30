@@ -8,6 +8,7 @@ namespace BankAccount.Shared.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public DateTimeOffset CreatedOn { get; set; }
+        public string SessionId { get; set; }
+        public DateTimeOffset CreatedOn { get; set; } = DateTime.UtcNow;
     }
 }

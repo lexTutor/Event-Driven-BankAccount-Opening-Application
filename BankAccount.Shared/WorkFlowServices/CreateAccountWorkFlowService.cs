@@ -46,7 +46,7 @@ namespace BankAccount.Shared.WorkFlowServices
             }
         }
 
-        public Task ExecuteAsync(string metadata)
+        public Task ExecuteAsync(string metadata, string sessionId)
         {
             throw new NotImplementedException();
         }

@@ -2,9 +2,9 @@
 {
     public class RecordTypes
     {
-        public record InitiateWorkFlowPayload(int WorkFlowId, string Metadata);
+        public record InitiateWorkFlowPayload(int WorkFlowId, string Metadata, string SessionId);
 
-        public record PotentialMemberPayload(string WebsiteStartingUrl, DateTime TOD);
+        public record PotentialMemberPayload(string WebsiteStartingUrl, string IpAddress, DateTime TOD);
 
         public record CreateAccountPayload(string Email, string FirstName, string LastName);
 
