@@ -18,6 +18,7 @@ namespace BankAccount.Shared.Utilities
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<PotentialMemberPayload, PotentialMember>().ReverseMap();
+                cfg.CreateMap<CreateAccountPayload, Account>().ReverseMap();
             });
 
             return config.CreateMapper();

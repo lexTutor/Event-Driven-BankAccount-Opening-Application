@@ -8,7 +8,7 @@
 
         public record CreateAccountPayload(string Email, string FirstName, string LastName);
 
-        public record CommunicateWithMemberPayload(string AccountNumber, int CreditScore, string Email, string FullName);
+        public record CommunicateWithMemberPayload(string AccountNumber, int? CreditScore, string Email, string FullName);
 
         public record EnumModel(int Id, string Name);
     }
