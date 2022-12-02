@@ -28,7 +28,7 @@ class Program
             services.AddLogging();
             services.AddSingleton<IJobActivator, WebJobActivator>();
             services.AddScoped<PotentialMemberJob, PotentialMemberJob>();
-            services.AddSharedServices();
+            services.AddSharedServices(context.Configuration);
             services.AddAutoMap();
             services.AddDatabase(context.Configuration);
         });

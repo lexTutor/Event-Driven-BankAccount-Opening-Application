@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.PotentialMember
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.CreateAccountWebJob", "BankAccount.CreateAccountWebJob\BankAccount.CreateAccountWebJob.csproj", "{47CDB23D-3A88-4AFE-AFEE-8ED2060DF0E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.CommunicateWithMemberWebJob", "BankAccount.CommunicateWithMemberWebJob\BankAccount.CommunicateWithMemberWebJob.csproj", "{50E9741E-CE17-48FE-AD96-3EB96EC07059}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{47CDB23D-3A88-4AFE-AFEE-8ED2060DF0E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47CDB23D-3A88-4AFE-AFEE-8ED2060DF0E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47CDB23D-3A88-4AFE-AFEE-8ED2060DF0E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50E9741E-CE17-48FE-AD96-3EB96EC07059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E9741E-CE17-48FE-AD96-3EB96EC07059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50E9741E-CE17-48FE-AD96-3EB96EC07059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50E9741E-CE17-48FE-AD96-3EB96EC07059}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

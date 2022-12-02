@@ -15,22 +15,22 @@ namespace BankAccount.Shared.WorkFlowServices
     {
         private readonly IMapper _mapper;
         private readonly ILogger<CreateAccountWorkFlowService> _logger;
-        private readonly IRepository<Account> _createAccountPayloadRepository;
+        private readonly IRepository<Account> _accountRepository;
         private readonly IRepository<CreditScore> _creditScoreRepository;
         private readonly IQueueService _queueService;
 
         public CreateAccountWorkFlowService(
             IMapper mapper,
             ILogger<CreateAccountWorkFlowService> logger,
-            IRepository<Account> createAccountPayloadRepository,
+            IRepository<Account> accountRepository,
             IRepository<CreditScore> creditScoreRepository,
             IQueueService queueService)
         {
-            _logger = logger;
-            _mapper = mapper;
-            _createAccountPayloadRepository = createAccountPayloadRepository;
-            _creditScoreRepository = creditScoreRepository;
-            _queueService = queueService;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
+            _creditScoreRepository = creditScoreRepository ?? throw new ArgumentNullException(nameof(creditScoreRepository));
+            _queueService = queueService ?? throw new ArgumentNullException(nameof(queueService));
         }
 
         public WorkFlow WorkFlow => WorkFlow.CreateAccount;
@@ -80,7 +80,22 @@ namespace BankAccount.Shared.WorkFlowServices
 
                 _logger.LogDebug("Initiating Call to database to store Create Account Payload information");
 
-                var entity = _mapper.Map<Account>(model);
+                Account entity = _accountRepository.Table.FirstOrDefault(x => x.Email == model.Email);
+                CommunicateWithMemberPayload metadataForEmail;
+                if (entity != null)
+                {
+                    _logger.LogWarning($"User {model.Email} already has an account, details will be mailed to the user");
+
+                    metadataForEmail = new CommunicateWithMemberPayload(entity.AccountNumber, entity.CreditScore,
+                        entity.Email, $"{entity.FirstName} {entity.LastName}");
+
+                    await _queueService.PublishMessageToQueue(WorkFlow.CommunicateWithMember.ToString(),
+                        JsonConvert.SerializeObject(metadataForEmail), sessionId);
+
+                    return;
+                }
+
+                entity = _mapper.Map<Account>(model);
                 entity.SessionId = sessionId;
                 entity.AccountNumber = Helper.RandomDigits();
 
@@ -91,18 +106,19 @@ namespace BankAccount.Shared.WorkFlowServices
                     entity.SocialSecurityNumber = creditScore.SocialSecurityNumber;
                 }
 
-                await _createAccountPayloadRepository.InsertAsync(entity);
-                await _createAccountPayloadRepository.DbContext.SaveChangesAsync();
+                await _accountRepository.InsertAsync(entity);
+                await _accountRepository.DbContext.SaveChangesAsync();
 
                 _logger.LogDebug("Sucessfully created account");
 
-                var metadataForEmail = new CommunicateWithMemberPayload(entity.AccountNumber, entity.CreditScore, entity.Email,
+                metadataForEmail = new CommunicateWithMemberPayload(entity.AccountNumber, entity.CreditScore, entity.Email,
                     $"{entity.FirstName} {entity.LastName}");
 
-                var serializedMetadata = JsonConvert.SerializeObject(metadataForEmail);
-
                 _logger.LogDebug("Initiating sending data to the queue");
-                await _queueService.PublishMessageToQueue(WorkFlow.CreateAccount.ToString(), serializedMetadata, sessionId);
+
+                await _queueService.PublishMessageToQueue(WorkFlow.CommunicateWithMember.ToString(),
+                    JsonConvert.SerializeObject(metadataForEmail), sessionId);
+
                 _logger.LogDebug("Data sent to queue sucessfully and workflow completed");
             }
             catch (Exception ex)

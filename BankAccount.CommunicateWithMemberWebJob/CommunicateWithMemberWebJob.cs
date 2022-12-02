@@ -4,30 +4,30 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using static BankAccount.Shared.Utilities.Enumeration;
 
-namespace BankAccount.PotentialMemberWebJob
+namespace BankAccount.CommunicateWithMemberWebJob
 {
-    public class PotentialMemberJob
+    public class CommunicateWithMemberWebJob
     {
-        private readonly IWorkflowService _potentialMemberWorkFlow;
-        private readonly ILogger<PotentialMemberJob> _logger;
+        private readonly IWorkflowService _communicateWithMemberWorkFlow;
+        private readonly ILogger<CommunicateWithMemberWebJob> _logger;
 
-        public WorkFlow WorkFlow => WorkFlow.PotentialMember;
-        public PotentialMemberJob(IEnumerable<IWorkflowService> orchestrators,
-            ILogger<PotentialMemberJob> logger)
+        public WorkFlow WorkFlow => WorkFlow.CommunicateWithMember;
+        public CommunicateWithMemberWebJob(IEnumerable<IWorkflowService> orchestrators,
+            ILogger<CommunicateWithMemberWebJob> logger)
         {
-            _potentialMemberWorkFlow = orchestrators.FirstOrDefault(x => x.WorkFlow == WorkFlow)
+            _communicateWithMemberWorkFlow = orchestrators.FirstOrDefault(x => x.WorkFlow == WorkFlow)
                 ?? throw new ArgumentNullException(nameof(orchestrators));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        [FunctionName("PotentialMemberFuction")]
-        public async Task Run([ServiceBusTrigger(queueName: Constants.PotentialMemberQueue)] string myQueueItem, string sessionId)
+        [FunctionName("CommunicateWithMemberFuction")]
+        public async Task Run([ServiceBusTrigger(queueName: Constants.CommunicateWithMemberQueue)] string myQueueItem, string sessionId)
         {
             try
             {
                 _logger.LogDebug($"ServiceBus queue trigger function attempting to process message");
 
-                await _potentialMemberWorkFlow.ExecuteAsync(myQueueItem, sessionId);
+                await _communicateWithMemberWorkFlow.ExecuteAsync(myQueueItem, sessionId);
 
                 _logger.LogDebug($"ServiceBus queue trigger function processed message successfully");
             }
