@@ -2,15 +2,24 @@
 using BankAccount.Shared;
 using BankAccount.Shared.WebJobConfiguration;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Reflection;
 
 class Program
 {
     static async Task Main()
     {
         var builder = new HostBuilder();
+        builder.ConfigureAppConfiguration((builder) =>
+        {
+            builder.AddEnvironmentVariables()
+                   .AddUserSecrets(Assembly.GetExecutingAssembly(), false)
+                   .Build();
+        });
+
         builder.ConfigureWebJobs(b =>
         {
             b.AddServiceBus(sbOptions =>

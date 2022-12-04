@@ -2,12 +2,15 @@ using BankAccount.OrchestratorAPI;
 using BankAccount.Shared;
 using BankAccount.Shared.OrchestorService;
 using BankAccount.Shared.Utilities;
+using System.Reflection;
 using static BankAccount.Shared.Domain.RecordTypes;
 using static BankAccount.Shared.Utilities.Enumeration;
 
-var builder = WebApplication.CreateBuilder(args);
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables()
+    .AddUserSecrets(Assembly.GetExecutingAssembly(), false);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSharedServices(builder.Configuration);
@@ -16,14 +19,13 @@ builder.Services.AddAutoMap();
 builder.Services.AddLogging();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
+    options.AddPolicy(name: myAllowSpecificOrigins,
                       policy =>
                       {
                           policy.AllowAnyOrigin();
                           policy.AllowAnyHeader();
                       });
 });
-
 var app = builder.Build();
 
 app.UseSwagger();
@@ -34,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.EnsureDatabaseSetup();
 }
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors(myAllowSpecificOrigins);
 
 app.MapPost("/initiateWorkflow", async (InitiateWorkFlowPayload payload, IOrchestratorService orchestratorService, ILogger<Program> logger)
     =>
