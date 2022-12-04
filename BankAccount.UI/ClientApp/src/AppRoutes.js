@@ -1,4 +1,5 @@
 import { CreateAccount } from "./components/CreateAccount";
+import { CreateAccountSuccess } from "./components/CreateAccountSuccess";
 import { FetchData } from "./components/FetchData";
 import { PotentialMember } from "./components/PotentialMember";
 import { TermsAndConditions } from "./components/TermsAndConditions";
@@ -19,6 +20,10 @@ const AppRoutes = [
     {
         path: 'Create-account',
         element: <CreateAccount />
+    },
+    {
+        path: 'success',
+        element: <CreateAccountSuccess />
     }
 ];
 

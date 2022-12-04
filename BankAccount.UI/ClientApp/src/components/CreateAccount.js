@@ -2,7 +2,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { postData } from './Utilities.js'
 
-export function CreateAccount() {
+export const CreateAccount = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -37,9 +37,11 @@ export function CreateAccount() {
                         lastName: lastName
                     })
             })
-            .then((data) => {
-                console.log(data);
+            .catch(() => {
                 navigate("/");
+            })
+            .then(() => {
+                navigate("/success");
             }
         );
     };
@@ -59,6 +61,7 @@ export function CreateAccount() {
                 <input type="Text" name="lastName" id="lastName" onChange={handleOnLastNameChange} /><br />
 
             </form>
+
             <button className="btn btn-primary" onClick={handleOnSubmit}>Create Account</button>
         </div>
     );

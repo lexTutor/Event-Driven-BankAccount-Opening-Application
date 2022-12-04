@@ -20,7 +20,7 @@ export function TermsAndConditions(data) {
 
     return (
         <div>
-            <h1>Hello, world!</h1>
+            <h1>Hello!!!</h1>
             <p>Welcome to your new single-page application, built with:</p>
 
             <p>To help you get started, do agree to the terms and conditions </p>

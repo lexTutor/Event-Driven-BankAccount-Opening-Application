@@ -1,22 +1,25 @@
-﻿import { React } from 'react';
+﻿import { React, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { postData } from './Utilities.js'
 
-export function PotentialMember() {
+export const PotentialMember = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const handleClick = () => {
+        setLoading(true);
         postData('https://localhost:44386/initiateWorkflow',
             {
                 workFlowId: 0,
-                Metadata: JSON.stringify({
+                Metadata: JSON.stringify(
+                {
                     WebsiteStartingUrl: "www.BankAccountUI/potentialMember",
                     ipAddress: "0:0:0"
                 })
             })
             .then((data) =>
             {
-                console.log(data);
+                setLoading(false);
                 navigate("/terms", {
                     state: {
                         sessionId: data.result
@@ -32,7 +35,8 @@ export function PotentialMember() {
 
             <p>Sign Up for an Account.</p>
 
-            <button className="btn btn-primary" onClick={handleClick} >Create Account</button>
+            <button className="btn btn-primary" onClick={handleClick} >
+                {loading ? "Loading..." : "Create Account"}</button>
         </div>
     );
 }
