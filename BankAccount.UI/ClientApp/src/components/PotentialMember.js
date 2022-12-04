@@ -14,7 +14,8 @@ export const PotentialMember = () => {
                 Metadata: JSON.stringify(
                 {
                     WebsiteStartingUrl: "www.BankAccountUI/potentialMember",
-                    ipAddress: "0:0:0"
+                        ipAddress: "0:0:0",
+                        tOD: new Date().toLocaleDateString()
                 })
             })
             .then((data) =>

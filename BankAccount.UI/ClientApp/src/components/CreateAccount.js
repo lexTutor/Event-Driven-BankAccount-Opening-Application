@@ -9,6 +9,7 @@ export const CreateAccount = () => {
     const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleOnEmailChange = event => {
         const value = event.target.value;
@@ -26,6 +27,7 @@ export const CreateAccount = () => {
     };
 
     const handleOnSubmit = () => {
+        setLoading(true);
         postData('https://localhost:44386/initiateWorkflow',
             {
                 workFlowId: 1,
@@ -38,9 +40,11 @@ export const CreateAccount = () => {
                     })
             })
             .catch(() => {
+                setLoading(false);
                 navigate("/");
             })
             .then(() => {
+                setLoading(false);
                 navigate("/success");
             }
         );
@@ -62,7 +66,9 @@ export const CreateAccount = () => {
 
             </form>
 
-            <button className="btn btn-primary" onClick={handleOnSubmit}>Create Account</button>
+            <button className="btn btn-primary" onClick={handleOnSubmit}>
+                {loading ? "Sending..." : "Create Account"}
+            </button>
         </div>
     );
 }
