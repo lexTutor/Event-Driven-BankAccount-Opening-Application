@@ -2,6 +2,6 @@
 {
     public interface IQueueService
     {
-        Task PublishMessageToQueue(string queueName, string message);
+        Task PublishMessageToQueue(string queueName, string message, string sessionId);
     }
 }

@@ -1,17 +1,41 @@
 ﻿using Azure.Messaging.ServiceBus;
+using BankAccount.Shared.CustomExceptions;
 using BankAccount.Shared.Utilities;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace BankAccount.Shared.QueueServices
 {
     public class QueueService : IQueueService
     {
-        public async Task PublishMessageToQueue(string queueName, string message)
+        private readonly ILogger<QueueService> _logger;
+        private readonly IConfiguration _configuration;
+
+        public QueueService(ILogger<QueueService> logger,
+            IConfiguration configuration)
         {
-            await using ServiceBusClient client = new(connectionString: Connection.ConnectionString);
+            _logger = logger;
+            _configuration = configuration;
+        }
 
-            await using ServiceBusSender serviceSender = client.CreateSender(queueName);
+        public async Task PublishMessageToQueue(string queueName, string message, string sessionId)
+        {
+            try
+            {
+                await using ServiceBusClient client = new(connectionString: _configuration[Constants.ServiceBus]);
 
-            await serviceSender.SendMessageAsync(new(message));
+                await using ServiceBusSender serviceSender = client.CreateSender(queueName);
+
+                ServiceBusMessage serviceBusMessage = new(message);
+                serviceBusMessage.SessionId = sessionId;
+
+                await serviceSender.SendMessageAsync(serviceBusMessage);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw new QueueServiceException("Unable to upload data to queue");
+            }
         }
     }
 

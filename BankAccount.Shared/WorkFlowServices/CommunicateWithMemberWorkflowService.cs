@@ -1,5 +1,6 @@
 ﻿using BankAccount.Shared.Contracts;
 using BankAccount.Shared.Utilities;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using static BankAccount.Shared.Domain.RecordTypes;
 using static BankAccount.Shared.Utilities.Enumeration;
@@ -8,8 +9,15 @@ namespace BankAccount.Shared.WorkFlowServices
 {
     public class CommunicateWithMemberWorkflowService : IWorkflowService
     {
-        public WorkFlow WorkFlow => WorkFlow.CommunicateWithMember;
+        private readonly ILogger<CommunicateWithMemberWorkflowService> _logger;
 
+        public CommunicateWithMemberWorkflowService(ILogger<CommunicateWithMemberWorkflowService> logger)
+        {
+            _logger = logger;
+        }
+
+        public WorkFlow WorkFlow => WorkFlow.CommunicateWithMember;
+       
         public OperationResult<string> ValidateMetadata(string metadata)
         {
             try
@@ -27,10 +35,22 @@ namespace BankAccount.Shared.WorkFlowServices
 
                 return OperationResult<string>.Success;
             }
-            catch (JsonSerializationException)
+            catch (JsonException ex)
             {
+                _logger.LogWarning($"Unable to deserialize metadata errors:{ex.Message}");
                 return OperationResult<string>.Failed();
             }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"An error occured during data processing {ex}");
+                throw;
+            }
         }
+
+        public Task ExecuteAsync(string metadata, string sessionId)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
