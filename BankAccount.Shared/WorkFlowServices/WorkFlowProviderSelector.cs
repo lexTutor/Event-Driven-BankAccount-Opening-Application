@@ -9,7 +9,7 @@ namespace BankAccount.Shared.WorkFlowServices
 
         public WorkFlowProviderSelector(IEnumerable<IWorkflowService> orchestrators)
         {
-            _orchestrators = orchestrators;
+            _orchestrators = orchestrators ?? throw new ArgumentNullException(nameof(orchestrators));
         }
 
         public IWorkflowService GetWorkFlowService(WorkFlow workFlow)

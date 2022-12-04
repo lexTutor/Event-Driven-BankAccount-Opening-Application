@@ -1,4 +1,4 @@
-﻿using BankAccount.PotentialMemberWebJob;
+﻿using BankAccount.CommunicateWithMemberWebJob;
 using BankAccount.Shared;
 using BankAccount.Shared.WebJobConfiguration;
 using Microsoft.Azure.WebJobs.Host;
@@ -22,12 +22,12 @@ class Program
         builder.ConfigureLogging((context, b) =>
         {
             b.AddConsole();
-        
+
         }).ConfigureServices((context, services) =>
         {
             services.AddLogging();
             services.AddSingleton<IJobActivator, WebJobActivator>();
-            services.AddScoped<PotentialMemberJob, PotentialMemberJob>();
+            services.AddScoped<CommunicateWithMemberWebJob, CommunicateWithMemberWebJob>();
             services.AddSharedServices(context.Configuration);
             services.AddAutoMap();
             services.AddDatabase(context.Configuration);

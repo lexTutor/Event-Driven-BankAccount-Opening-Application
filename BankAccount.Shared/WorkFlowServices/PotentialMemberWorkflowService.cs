@@ -19,9 +19,9 @@ namespace BankAccount.Shared.WorkFlowServices
             IRepository<PotentialMember> potentialMemberRepository,
             IMapper mapper)
         {
-            _logger = logger;
-            _potentialMemberRepository = potentialMemberRepository;
-            _mapper = mapper;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _potentialMemberRepository = potentialMemberRepository ?? throw new ArgumentNullException(nameof(potentialMemberRepository));
         }
 
         public WorkFlow WorkFlow => WorkFlow.PotentialMember;

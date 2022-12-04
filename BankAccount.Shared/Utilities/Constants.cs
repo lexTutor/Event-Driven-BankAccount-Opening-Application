@@ -7,5 +7,7 @@
         public const string ServiceBus = "ServiceBus";
 
         public const string PotentialMemberQueue = "PotentialMember";
+        public const string CreateAccountQueue = "CreateAccount";
+        public const string CommunicateWithMemberQueue = "CommunicateWithMember";
     }
 }

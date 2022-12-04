@@ -3,8 +3,10 @@ using BankAccount.Shared.Contracts;
 using BankAccount.Shared.Data;
 using BankAccount.Shared.OrchestorService;
 using BankAccount.Shared.QueueServices;
+using BankAccount.Shared.Services;
 using BankAccount.Shared.Utilities;
 using BankAccount.Shared.WorkFlowServices;
+using Mailjet.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +23,7 @@ namespace BankAccount.Shared
             });
         }
 
-        public static IServiceCollection AddSharedServices(this IServiceCollection services)
+        public static IServiceCollection AddSharedServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IOrchestratorService, OrchestratorService>();
             services.AddScoped<IWorkflowService, PotentialMemberWorkflowService>();
@@ -29,7 +31,20 @@ namespace BankAccount.Shared
             services.AddScoped<IWorkflowService, CommunicateWithMemberWorkflowService>();
             services.AddScoped<IWorkflowProviderSelector, WorkFlowProviderSelector>();
             services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped<IMailService, MailJetMailService>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
+            #region ConfigVars
+
+            var mailJetConfig = new MailjetClient
+                (
+                configuration["MailJetSettings:PublicKey"],
+                configuration["MailJetSettings:PrivateKey"]
+                );
+
+            #endregion
+
+            services.AddSingleton(mailJetConfig);
 
             return services;
         }

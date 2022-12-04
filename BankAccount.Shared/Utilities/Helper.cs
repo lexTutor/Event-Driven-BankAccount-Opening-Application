@@ -11,5 +11,15 @@ namespace BankAccount.Shared.Utilities
 
             return values.Select(x => new EnumModel(x, Enum.GetName(type, x).Replace("_", " "))).ToList();
         }
+
+        public static string RandomDigits()
+        {
+            var random = new Random();
+            string digits = string.Empty;
+            for (int i = 0; i < 10; i++)
+                digits = string.Concat(digits, random.Next(10).ToString());
+
+            return digits;
+        }
     }
 }
