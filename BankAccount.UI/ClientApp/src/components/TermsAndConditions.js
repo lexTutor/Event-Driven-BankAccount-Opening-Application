@@ -1,12 +1,17 @@
 ﻿import React from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-export function TermsAndConditions() {
-
+export function TermsAndConditions(data) {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleAccept = () => {
-        navigate("/Create-account");
+        console.log(location.state.sessionId);
+        navigate("/Create-account", {
+            state: {
+                sessionId: data.result
+            }
+        });
     }
 
     const handleDecline = () => {

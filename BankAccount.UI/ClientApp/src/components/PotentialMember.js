@@ -1,11 +1,29 @@
 ﻿import { React } from 'react';
 import { useNavigate } from "react-router-dom";
+import { postData } from './Utilities.js'
 
 export function PotentialMember() {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate("/terms");
+        postData('https://localhost:44386/initiateWorkflow',
+            {
+                workFlowId: 0,
+                Metadata: JSON.stringify({
+                    WebsiteStartingUrl: "www.BankAccountUI/potentialMember",
+                    ipAddress: "0:0:0"
+                })
+            })
+            .then((data) =>
+            {
+                console.log(data);
+                navigate("/terms", {
+                    state: {
+                        sessionId: data.result
+                    }
+                });
+            }
+        );
     }
 
     return (

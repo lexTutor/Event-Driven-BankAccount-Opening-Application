@@ -6,6 +6,7 @@ using static BankAccount.Shared.Domain.RecordTypes;
 using static BankAccount.Shared.Utilities.Enumeration;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -13,6 +14,15 @@ builder.Services.AddSharedServices();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddAutoMap();
 builder.Services.AddLogging();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin();
+                          policy.AllowAnyHeader();
+                      });
+});
 
 var app = builder.Build();
 
@@ -24,6 +34,7 @@ if (app.Environment.IsDevelopment())
     app.EnsureDatabaseSetup();
 }
 
+app.UseCors(MyAllowSpecificOrigins);
 
 app.MapPost("/initiateWorkflow", async (InitiateWorkFlowPayload payload, IOrchestratorService orchestratorService, ILogger<Program> logger)
     =>

@@ -1,16 +1,14 @@
-﻿import { React, useState} from 'react';
-import { useNavigate } from "react-router-dom";
+﻿import { React, useState } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
+import { postData } from './Utilities.js'
 
 export function CreateAccount() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-
-    const handleClick = () => {
-        navigate("/");
-    }
 
     const handleOnEmailChange = event => {
         const value = event.target.value;
@@ -28,22 +26,36 @@ export function CreateAccount() {
     };
 
     const handleOnSubmit = () => {
-        console.log(firstName);
-        console.log(lastName);
-        console.log(email);
+        postData('https://localhost:44386/initiateWorkflow',
+            {
+                workFlowId: 1,
+                sessionId: location.state.sessionId,
+                Metadata: JSON.stringify(
+                    {
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName
+                    })
+            })
+            .then((data) => {
+                console.log(data);
+                navigate("/");
+            }
+        );
     };
+
     return (
         <div>
             <h1>Best Decision of your life</h1>
 
             <form style={{ marginBottom: 30 }}>
-                <label for="email">Email</label><br/>
+                <label htmlFor="email">Email</label><br />
                 <input type="Text" name="email" id="email" onChange={handleOnEmailChange} /><br />
 
-                <label for="firstName">FirstName</label><br />
+                <label htmlFor="firstName">FirstName</label><br />
                 <input type="Text" name="firstName" id="firstName" onChange={handleOnFirstNameChange} /><br />
 
-                <label for="lastName">LastName</label><br />
+                <label htmlFor="lastName">LastName</label><br />
                 <input type="Text" name="lastName" id="lastName" onChange={handleOnLastNameChange} /><br />
 
             </form>
