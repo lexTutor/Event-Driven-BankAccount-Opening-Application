@@ -17,6 +17,7 @@ namespace BankAccount.Shared.Data
         public DbSet<Account> Accounts => Set<Account>();
         public DbSet<CreditScore> CreditScores => Set<CreditScore>();
         public DbSet<PotentialMember> PotentialMembers => Set<PotentialMember>();
+        public DbSet<ReferenceNumber> ReferenceNumbers => Set<ReferenceNumber>();
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

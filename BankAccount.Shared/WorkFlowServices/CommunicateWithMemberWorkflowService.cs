@@ -23,27 +23,31 @@ namespace BankAccount.Shared.WorkFlowServices
 
         public WorkFlow WorkFlow => WorkFlow.CommunicateWithMember;
 
-        public OperationResult<string> ValidateMetadata(string metadata)
+        public OperationResult<dynamic> ValidateMetadata(string metadata)
         {
             try
             {
                 CommunicateWithMemberPayload model = JsonConvert.DeserializeObject<CommunicateWithMemberPayload>(metadata);
 
                 if (string.IsNullOrWhiteSpace(model.AccountNumber))
-                    return OperationResult<string>.Failed($"{nameof(model.AccountNumber)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.AccountNumber)} is required");
 
                 if (string.IsNullOrWhiteSpace(model.Email))
-                    return OperationResult<string>.Failed($"{nameof(model.Email)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.Email)} is required");
 
                 if (string.IsNullOrWhiteSpace(model.FullName))
-                    return OperationResult<string>.Failed($"{nameof(model.FullName)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.FullName)} is required");
 
-                return OperationResult<string>.Success;
+                return new OperationResult<dynamic>
+                {
+                    Result = model,
+                    Successful = true
+                };
             }
             catch (JsonException ex)
             {
                 _logger.LogWarning($"Unable to deserialize metadata errors:{ex.Message}");
-                return OperationResult<string>.Failed();
+                return OperationResult<dynamic>.Failed("Unable to deserialize metadata");
             }
             catch (Exception ex)
             {
@@ -60,9 +64,10 @@ namespace BankAccount.Shared.WorkFlowServices
                 if (!validateMetdata.Successful)
                 {
                     _logger.LogWarning($"Metadata validation was unsuccessful with error: {validateMetdata.Result}");
+                    return;
                 }
 
-                CommunicateWithMemberPayload model = JsonConvert.DeserializeObject<CommunicateWithMemberPayload>(metadata);
+                CommunicateWithMemberPayload model = (CommunicateWithMemberPayload)validateMetdata.Result;
 
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles/CommunicateWithMember.html");
                 if (!File.Exists(filePath))

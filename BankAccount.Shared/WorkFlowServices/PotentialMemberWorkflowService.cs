@@ -26,27 +26,31 @@ namespace BankAccount.Shared.WorkFlowServices
 
         public WorkFlow WorkFlow => WorkFlow.PotentialMember;
 
-        public OperationResult<string> ValidateMetadata(string metadata)
+        public OperationResult<dynamic> ValidateMetadata(string metadata)
         {
             try
             {
                 PotentialMemberPayload model = JsonConvert.DeserializeObject<PotentialMemberPayload>(metadata);
 
                 if (string.IsNullOrWhiteSpace(model.WebsiteStartingUrl))
-                    return OperationResult<string>.Failed($"{nameof(model.WebsiteStartingUrl)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.WebsiteStartingUrl)} is required");
 
                 if (string.IsNullOrWhiteSpace(model.IpAddress))
-                    return OperationResult<string>.Failed($"{nameof(model.IpAddress)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.IpAddress)} is required");
 
-                if (model.TOD > DateTime.UtcNow)
-                    return OperationResult<string>.Failed($"Invalid {nameof(model.TOD)}");
+                if (model.InitializationTime > DateTime.UtcNow)
+                    return OperationResult<dynamic>.Failed($"Invalid {nameof(model.InitializationTime)}");
 
-                return OperationResult<string>.Success;
+                return new OperationResult<dynamic>
+                {
+                    Result = model,
+                    Successful = true
+                };
             }
             catch (JsonException ex)
             {
                 _logger.LogError($"Unable to deserialize metadata errors:{ex.Message}");
-                return OperationResult<string>.Failed();
+                return OperationResult<dynamic>.Failed("Unable to deserialize metadata");
             }
             catch (Exception ex)
             {
@@ -63,9 +67,10 @@ namespace BankAccount.Shared.WorkFlowServices
                 if (!validateMetdata.Successful)
                 {
                     _logger.LogWarning($"Metadata validation was unsuccessful with error: {validateMetdata.Result}");
+                    return;
                 }
 
-                PotentialMemberPayload model = JsonConvert.DeserializeObject<PotentialMemberPayload>(metadata);
+                PotentialMemberPayload model = (PotentialMemberPayload)validateMetdata.Result;
 
                 _logger.LogDebug("Initiating Call to database to store potential Member information");
 

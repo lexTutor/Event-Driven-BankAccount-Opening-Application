@@ -9,6 +9,6 @@ namespace BankAccount.Shared.Contracts
 
         Task ExecuteAsync(string metadata, string sessionId);
 
-        OperationResult<string> ValidateMetadata(string metadata);
+        OperationResult<dynamic> ValidateMetadata(string metadata);
     }
 }

@@ -28,7 +28,7 @@ export const CreateAccount = () => {
 
     const handleOnSubmit = () => {
         setLoading(true);
-        postData('https://localhost:44386/initiateWorkflow',
+        postData('https://localhost:44386/Orchestrator/initiateWorkflow',
             {
                 workFlowId: 1,
                 sessionId: location.state.sessionId,

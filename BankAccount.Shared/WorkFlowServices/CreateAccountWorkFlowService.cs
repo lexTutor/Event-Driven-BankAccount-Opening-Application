@@ -17,6 +17,7 @@ namespace BankAccount.Shared.WorkFlowServices
         private readonly ILogger<CreateAccountWorkFlowService> _logger;
         private readonly IRepository<Account> _accountRepository;
         private readonly IRepository<CreditScore> _creditScoreRepository;
+        private readonly IReferenceNumberService _referenceNumberService;
         private readonly IQueueService _queueService;
 
         public CreateAccountWorkFlowService(
@@ -24,40 +25,46 @@ namespace BankAccount.Shared.WorkFlowServices
             ILogger<CreateAccountWorkFlowService> logger,
             IRepository<Account> accountRepository,
             IRepository<CreditScore> creditScoreRepository,
-            IQueueService queueService)
+            IQueueService queueService,
+            IReferenceNumberService referenceNumberService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _accountRepository = accountRepository ?? throw new ArgumentNullException(nameof(accountRepository));
             _creditScoreRepository = creditScoreRepository ?? throw new ArgumentNullException(nameof(creditScoreRepository));
             _queueService = queueService ?? throw new ArgumentNullException(nameof(queueService));
+            _referenceNumberService = referenceNumberService ?? throw new ArgumentNullException(nameof(referenceNumberService));
         }
 
         public WorkFlow WorkFlow => WorkFlow.CreateAccount;
 
-        public OperationResult<string> ValidateMetadata(string metadata)
+        public OperationResult<dynamic> ValidateMetadata(string metadata)
         {
             try
             {
                 CreateAccountPayload? model = JsonConvert.DeserializeObject<CreateAccountPayload>(metadata);
                 if (string.IsNullOrWhiteSpace(model.Email))
-                    return OperationResult<string>.Failed($"{nameof(model.Email)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.Email)} is required");
 
                 if (string.IsNullOrWhiteSpace(model.FirstName))
-                    return OperationResult<string>.Failed($"{nameof(model.FirstName)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.FirstName)} is required");
 
                 if (string.IsNullOrWhiteSpace(model.LastName))
-                    return OperationResult<string>.Failed($"{nameof(model.LastName)} is required");
+                    return OperationResult<dynamic>.Failed($"{nameof(model.LastName)} is required");
 
                 if (!Validation.IsValidEmail(model.Email))
-                    return OperationResult<string>.Failed($"Invalid {nameof(model.Email)}");
+                    return OperationResult<dynamic>.Failed($"Invalid {nameof(model.Email)}");
 
-                return OperationResult<string>.Success;
+                return new OperationResult<dynamic>
+                {
+                    Result = model,
+                    Successful = true
+                };
             }
             catch (JsonException ex)
             {
                 _logger.LogWarning($"Unable to deserialize metadata errors:{ex.Message}");
-                return OperationResult<string>.Failed();
+                return OperationResult<dynamic>.Failed("Unable to deserialize metadata");
             }
             catch (Exception ex)
             {
@@ -74,9 +81,10 @@ namespace BankAccount.Shared.WorkFlowServices
                 if (!validateMetdata.Successful)
                 {
                     _logger.LogWarning($"Metadata validation was unsuccessful with error: {validateMetdata.Result}");
+                    return;
                 }
 
-                CreateAccountPayload model = JsonConvert.DeserializeObject<CreateAccountPayload>(metadata);
+                CreateAccountPayload model = (CreateAccountPayload)validateMetdata.Result;
 
                 _logger.LogDebug("Initiating Call to database to store Create Account Payload information");
 
@@ -97,7 +105,7 @@ namespace BankAccount.Shared.WorkFlowServices
 
                 entity = _mapper.Map<Account>(model);
                 entity.SessionId = sessionId;
-                entity.AccountNumber = Helper.RandomDigits();
+                entity.AccountNumber = await ReferenceNumberServiceExtensions.GetAccountNumber(_referenceNumberService);
 
                 var creditScore = await _creditScoreRepository.TableNoTracking.FirstOrDefaultAsync(x => x.Email == model.Email);
                 if (creditScore != null)

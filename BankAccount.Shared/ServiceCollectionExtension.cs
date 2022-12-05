@@ -30,6 +30,8 @@ namespace BankAccount.Shared
             services.AddScoped<IWorkflowService, CreateAccountWorkFlowService>();
             services.AddScoped<IWorkflowService, CommunicateWithMemberWorkflowService>();
             services.AddScoped<IWorkflowProviderSelector, WorkFlowProviderSelector>();
+            services.AddScoped<IReferenceNumberService, ReferenceNumberService>();
+            services.AddScoped<IDistributedLockManager, DistributedLockManager>();
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));

@@ -8,14 +8,14 @@ export const PotentialMember = () => {
 
     const handleClick = () => {
         setLoading(true);
-        postData('https://localhost:44386/initiateWorkflow',
+        postData('https://localhost:44386/Orchestrator/initiateWorkflow',
             {
                 workFlowId: 0,
                 Metadata: JSON.stringify(
                 {
                     WebsiteStartingUrl: "www.BankAccountUI/potentialMember",
                         ipAddress: "0:0:0",
-                        tOD: new Date().toLocaleDateString()
+                        initializationTime: new Date().toLocaleDateString()
                 })
             })
             .then((data) =>

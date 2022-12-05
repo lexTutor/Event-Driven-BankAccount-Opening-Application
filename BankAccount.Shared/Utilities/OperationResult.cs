@@ -1,4 +1,6 @@
-﻿namespace BankAccount.Shared.Utilities
+﻿using System.Net;
+
+namespace BankAccount.Shared.Utilities
 {
     /// <summary>
     /// Represents the result of an operation.
@@ -12,6 +14,10 @@
         /// </summary>
         public IEnumerable<string> Errors { get; protected set; }
 
+        /// <summary>
+        /// The status code to be used in responding to the client based on result of the request.
+        /// </summary>
+        public HttpStatusCode StatusCode { get; set; }
         /// <summary>
         /// Whether if the operation succeeded or not.
         /// </summary>

@@ -3,6 +3,7 @@ using BankAccount.Shared.CustomExceptions;
 using BankAccount.Shared.QueueServices;
 using BankAccount.Shared.Utilities;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using static BankAccount.Shared.Domain.RecordTypes;
 using static BankAccount.Shared.Utilities.Enumeration;
 
@@ -34,7 +35,7 @@ namespace BankAccount.Shared.OrchestorService
                 if (workFlow == null)
                     return OperationResult<string>.Failed($"Invalid {nameof(payload.WorkFlowId)}");
 
-                OperationResult<string> validationResult = workFlow.ValidateMetadata(payload.Metadata);
+                OperationResult<dynamic> validationResult = workFlow.ValidateMetadata(payload.Metadata);
                 if (!validationResult.Successful)
                     return OperationResult<string>.Failed($"Invalid {nameof(payload.Metadata)} for Workflow {workFlowType}");
 
@@ -45,17 +46,17 @@ namespace BankAccount.Shared.OrchestorService
                 await _queueService.PublishMessageToQueue(workFlowType.ToString(), payload.Metadata, sessionId);
                 _logger.LogInformation($"Published data to queue {workFlowType}");
 
-                return new OperationResult<string>() { Result = sessionId, Successful = true };
+                return new OperationResult<string>() { Result = sessionId, Successful = true, StatusCode = HttpStatusCode.OK };
             }
             catch (QueueServiceException ex)
             {
                 _logger.LogError(ex.Message, ex);
-                throw;
+                return new OperationResult<string>() { StatusCode = HttpStatusCode.InternalServerError };
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex);
-                throw;
+                return new OperationResult<string>() { StatusCode = HttpStatusCode.InternalServerError };
             }
         }
     }

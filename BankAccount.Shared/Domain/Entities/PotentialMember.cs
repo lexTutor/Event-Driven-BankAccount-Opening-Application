@@ -3,7 +3,7 @@
     public class PotentialMember : BaseEntity
     {
         public string IPAddress { get; set; }
-        public DateTimeOffset TOD { get; set; }
+        public DateTimeOffset InitializationTime { get; set; }
         public string WebsiteStartingUrl { get; set; }
     }
 }
