@@ -7,16 +7,16 @@ using Microsoft.Extensions.Logging;
 
 namespace BankAccount.Shared.Services
 {
-    public class MailJetMailService : IMailService
+    public class MailService : IMailService
     {
         private readonly MailjetClient _client;
         private readonly IConfiguration _configuration;
-        private readonly ILogger<MailJetMailService> _logger;
+        private readonly ILogger<MailService> _logger;
 
-        public MailJetMailService(
+        public MailService(
             MailjetClient client,
             IConfiguration configuration,
-            ILogger<MailJetMailService> logger)
+            ILogger<MailService> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _client = client ?? throw new ArgumentNullException(nameof(client));
@@ -43,7 +43,7 @@ namespace BankAccount.Shared.Services
             }
             catch (Exception ex)
             {
-                _logger.LogDebug(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
                 throw;
             }
         }

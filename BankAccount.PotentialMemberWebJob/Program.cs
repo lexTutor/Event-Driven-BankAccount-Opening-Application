@@ -25,7 +25,7 @@ class Program
             b.AddServiceBus(sbOptions =>
             {
                 sbOptions.AutoCompleteMessages = true;
-                sbOptions.MaxConcurrentCalls = 1;
+                sbOptions.MaxConcurrentCalls = 8;
             });
         });
         builder.ConfigureLogging((context, b) =>

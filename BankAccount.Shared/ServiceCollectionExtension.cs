@@ -31,7 +31,7 @@ namespace BankAccount.Shared
             services.AddScoped<IWorkflowService, CommunicateWithMemberWorkflowService>();
             services.AddScoped<IWorkflowProviderSelector, WorkFlowProviderSelector>();
             services.AddScoped<IQueueService, QueueService>();
-            services.AddScoped<IMailService, MailJetMailService>();
+            services.AddScoped<IMailService, MailService>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
             #region ConfigVars

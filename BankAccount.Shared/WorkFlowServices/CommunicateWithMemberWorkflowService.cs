@@ -64,7 +64,11 @@ namespace BankAccount.Shared.WorkFlowServices
 
                 CommunicateWithMemberPayload model = JsonConvert.DeserializeObject<CommunicateWithMemberPayload>(metadata);
 
-                var fileText = await File.ReadAllTextAsync(Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles/CommunicateWithMember.html"));
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles/CommunicateWithMember.html");
+                if (!File.Exists(filePath))
+                    throw new ArgumentException("CommunicateWithMember.html file not found");
+
+                var fileText = await File.ReadAllTextAsync(filePath);
                 var updatedFile = fileText.Replace("**username**", model.FullName).Replace("**account**", model.AccountNumber);
                 var mailRequest = new MailRequest
                 {
@@ -81,7 +85,7 @@ namespace BankAccount.Shared.WorkFlowServices
             }
             catch (Exception ex)
             {
-                _logger.LogDebug(ex.Message, ex);
+                _logger.LogError(ex.Message, ex);
                 throw;
             }
         }

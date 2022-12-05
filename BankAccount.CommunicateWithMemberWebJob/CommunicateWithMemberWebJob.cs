@@ -25,7 +25,7 @@ namespace BankAccount.CommunicateWithMemberWebJob
         {
             try
             {
-                _logger.LogDebug($"ServiceBus queue trigger function attempting to process message");
+                _logger.LogDebug($"ServiceBus queue trigger function attempting to process message {myQueueItem}");
 
                 await _communicateWithMemberWorkFlow.ExecuteAsync(myQueueItem, sessionId);
 
