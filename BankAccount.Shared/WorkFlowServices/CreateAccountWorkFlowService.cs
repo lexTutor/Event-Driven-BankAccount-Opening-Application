@@ -114,8 +114,7 @@ namespace BankAccount.Shared.WorkFlowServices
                     entity.SocialSecurityNumber = creditScore.SocialSecurityNumber;
                 }
 
-                await _accountRepository.InsertAsync(entity);
-                await _accountRepository.DbContext.SaveChangesAsync();
+                await _accountRepository.SaveOrUpdateAsync(entity);
 
                 _logger.LogDebug("Sucessfully created account");
 

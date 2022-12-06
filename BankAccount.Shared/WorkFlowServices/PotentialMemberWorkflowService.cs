@@ -77,8 +77,7 @@ namespace BankAccount.Shared.WorkFlowServices
                 var entity = _mapper.Map<PotentialMember>(model);
                 entity.SessionId = sessionId;
 
-                await _potentialMemberRepository.InsertAsync(entity);
-                await _potentialMemberRepository.DbContext.SaveChangesAsync();
+                await _potentialMemberRepository.SaveOrUpdateAsync(entity);
 
                 _logger.LogDebug("Sucessfully stored potential member details");
             }
