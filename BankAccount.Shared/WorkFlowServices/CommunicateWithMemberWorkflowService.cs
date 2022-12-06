@@ -27,6 +27,10 @@ namespace BankAccount.Shared.WorkFlowServices
         {
             try
             {
+
+                if (string.IsNullOrWhiteSpace(metadata))
+                    return OperationResult<dynamic>.Failed($"Invalid {nameof(metadata)}");
+
                 CommunicateWithMemberPayload model = JsonConvert.DeserializeObject<CommunicateWithMemberPayload>(metadata);
 
                 if (string.IsNullOrWhiteSpace(model.AccountNumber))

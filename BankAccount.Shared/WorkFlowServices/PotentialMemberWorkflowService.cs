@@ -30,6 +30,9 @@ namespace BankAccount.Shared.WorkFlowServices
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(metadata)) 
+                    return OperationResult<dynamic>.Failed($"Invalid {nameof(metadata)}");
+
                 PotentialMemberPayload model = JsonConvert.DeserializeObject<PotentialMemberPayload>(metadata);
 
                 if (string.IsNullOrWhiteSpace(model.WebsiteStartingUrl))

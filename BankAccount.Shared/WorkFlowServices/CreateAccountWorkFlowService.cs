@@ -42,6 +42,10 @@ namespace BankAccount.Shared.WorkFlowServices
         {
             try
             {
+
+                if (string.IsNullOrWhiteSpace(metadata))
+                    return OperationResult<dynamic>.Failed($"Invalid {nameof(metadata)}");
+
                 CreateAccountPayload? model = JsonConvert.DeserializeObject<CreateAccountPayload>(metadata);
                 if (string.IsNullOrWhiteSpace(model.Email))
                     return OperationResult<dynamic>.Failed($"{nameof(model.Email)} is required");
