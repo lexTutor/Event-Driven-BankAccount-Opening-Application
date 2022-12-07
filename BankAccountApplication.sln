@@ -9,11 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.Shared", "BankA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.PotentialMemberWebJob", "BankAccount.PotentialMemberWebJob\BankAccount.PotentialMemberWebJob.csproj", "{1207FB6E-B0E9-41B3-8721-C10EE4E6E202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.CreateAccountWebJob", "BankAccount.CreateAccountWebJob\BankAccount.CreateAccountWebJob.csproj", "{47CDB23D-3A88-4AFE-AFEE-8ED2060DF0E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.CreateAccountWebJob", "BankAccount.CreateAccountWebJob\BankAccount.CreateAccountWebJob.csproj", "{47CDB23D-3A88-4AFE-AFEE-8ED2060DF0E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.CommunicateWithMemberWebJob", "BankAccount.CommunicateWithMemberWebJob\BankAccount.CommunicateWithMemberWebJob.csproj", "{50E9741E-CE17-48FE-AD96-3EB96EC07059}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.CommunicateWithMemberWebJob", "BankAccount.CommunicateWithMemberWebJob\BankAccount.CommunicateWithMemberWebJob.csproj", "{50E9741E-CE17-48FE-AD96-3EB96EC07059}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.UI", "BankAccount.UI\BankAccount.UI.csproj", "{F263A715-1ED5-46AA-8D53-E1C28FD4C242}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.UI", "BankAccount.UI\BankAccount.UI.csproj", "{F263A715-1ED5-46AA-8D53-E1C28FD4C242}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.AzureFunctions", "BankAccount.AzureFunctions\BankAccount.AzureFunctions.csproj", "{F43558BF-F3FC-442D-B966-62B20D7AA171}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{F263A715-1ED5-46AA-8D53-E1C28FD4C242}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F263A715-1ED5-46AA-8D53-E1C28FD4C242}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F263A715-1ED5-46AA-8D53-E1C28FD4C242}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
