@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankAccount.UI", "BankAccou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.Test", "BankAccount.Test\BankAccount.Test.csproj", "{10940ADA-DBB2-4C8D-B2CB-604C7DDAA0B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankAccount.AzureFunctions", "BankAccount.AzureFunctions\BankAccount.AzureFunctions.csproj", "{F43558BF-F3FC-442D-B966-62B20D7AA171}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{10940ADA-DBB2-4C8D-B2CB-604C7DDAA0B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10940ADA-DBB2-4C8D-B2CB-604C7DDAA0B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10940ADA-DBB2-4C8D-B2CB-604C7DDAA0B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F43558BF-F3FC-442D-B966-62B20D7AA171}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
