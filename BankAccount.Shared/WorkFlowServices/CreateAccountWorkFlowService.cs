@@ -42,6 +42,10 @@ namespace BankAccount.Shared.WorkFlowServices
         {
             try
             {
+
+                if (string.IsNullOrWhiteSpace(metadata))
+                    return OperationResult<dynamic>.Failed($"Invalid {nameof(metadata)}");
+
                 CreateAccountPayload? model = JsonConvert.DeserializeObject<CreateAccountPayload>(metadata);
                 if (string.IsNullOrWhiteSpace(model.Email))
                     return OperationResult<dynamic>.Failed($"{nameof(model.Email)} is required");
@@ -114,8 +118,7 @@ namespace BankAccount.Shared.WorkFlowServices
                     entity.SocialSecurityNumber = creditScore.SocialSecurityNumber;
                 }
 
-                await _accountRepository.InsertAsync(entity);
-                await _accountRepository.DbContext.SaveChangesAsync();
+                await _accountRepository.SaveOrUpdateAsync(entity);
 
                 _logger.LogDebug("Sucessfully created account");
 
